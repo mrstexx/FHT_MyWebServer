@@ -3,13 +3,9 @@ package mywebserver.request;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Url;
 import mywebserver.http.EHttpHeader;
-import mywebserver.http.HttpHelper;
 import mywebserver.http.WebURL;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,7 +18,7 @@ public class WebRequest implements Request {
     private boolean isValidRequest = false;
     private String rawPath = "";
     private String requestMethod = "";
-    private String requestBody;
+    private String requestBody = "";
     private Map<String, String> headers;
 
     public WebRequest(InputStream inputStream) {
@@ -37,17 +33,21 @@ public class WebRequest implements Request {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
             String headerLine = "";
-            int lineCounter = 0;
+            boolean isFirstLine = true;
             while ((headerLine = bufferedReader.readLine()) != null) {
                 if (headerLine.isEmpty()) {
                     continue;
                 }
-                if (lineCounter == 0) {
+                if (isFirstLine) {
                     parseHeaderMethod(headerLine);
-                    lineCounter++;
+                    isFirstLine = false;
                     continue;
                 }
-                parseHeaderMetadata(headerLine);
+                if (!parseHeaderMetadata(headerLine)) {
+                    if (this.requestMethod.equals(ERequestMethods.POST.getValue())) {
+                        parseRequestBody(headerLine);
+                    }
+                }
             }
         } catch (IOException error) {
             System.out.println("WebRequest: An error occurred while reading input stream!");
@@ -56,7 +56,6 @@ public class WebRequest implements Request {
     }
 
     private void parseRequestBody(String body) {
-        // TODO Add POST option => in that case we need request body
         this.requestBody += body;
     }
 
@@ -67,7 +66,7 @@ public class WebRequest implements Request {
         if (parser.hasMoreTokens()) {
             url = parser.nextToken();
         }
-        if (Arrays.asList(HttpHelper.VALID_METHODS).contains(method)) {
+        if (ERequestMethods.contains(method)) {
             this.requestMethod = method;
             // WebURL.isValidURL()
             // TODO better handling for isValidURL
@@ -78,14 +77,17 @@ public class WebRequest implements Request {
         }
     }
 
-    private void parseHeaderMetadata(String headerLine) {
+    private boolean parseHeaderMetadata(String headerLine) {
         if (this.headers == null) {
             this.headers = new HashMap<>();
         }
         String[] splitLine = headerLine.split("[:]");
-        if (splitLine.length > 0) {
-            headers.put(splitLine[0].toLowerCase(), splitLine[1]);
+        if (splitLine.length > 1) {
+            headers.put(splitLine[0].toLowerCase().trim(), splitLine[1].trim());
+            return true;
         }
+        // return false means end of metadata and taking request body
+        return false;
     }
 
     @Override
@@ -145,21 +147,31 @@ public class WebRequest implements Request {
 
     @Override
     public InputStream getContentStream() {
-        return this.inputStream;
+        if (this.requestBody.isEmpty()) {
+            return null;
+        }
+        return new ByteArrayInputStream(this.requestBody.getBytes(StandardCharsets.UTF_8));
+
     }
 
     @Override
     public String getContentString() {
-        return this.toString();
+        if (this.requestBody.isEmpty()) {
+            return null;
+        }
+        return this.requestBody;
     }
 
     @Override
     public byte[] getContentBytes() {
-        return this.toString().getBytes(StandardCharsets.UTF_8);
+        if (this.requestBody.isEmpty()) {
+            return null;
+        }
+        return this.requestBody.getBytes(StandardCharsets.UTF_8);
     }
 
     public String toString() {
-        return getRequestLine() + getRequestHeader();
+        return getRequestLine() + getRequestHeader() + "\n\n" + this.requestBody;
     }
 
     private String getRequestLine() {

@@ -8,27 +8,27 @@ import java.io.InputStream;
 
 public class UEB5 {
 
-	public void helloWorld() {
+    public void helloWorld() {
 
-	}
+    }
 
-	public Request getRequest(InputStream inputStream) {
-		return null;
-	}
+    public Request getRequest(InputStream inputStream) {
+        return null;
+    }
 
-	public PluginManager getPluginManager() {
-		return null;
-	}
+    public PluginManager getPluginManager() {
+        return null;
+    }
 
-	public Plugin getStaticFilePlugin() {
-		return null;
-	}
+    public Plugin getStaticFilePlugin() {
+        return null;
+    }
 
-	public void setStatiFileFolder(String s) {
+    public void setStatiFileFolder(String s) {
 
-	}
+    }
 
-	public String getStaticFileUrl(String s) {
-		return null;
-	}
+    public String getStaticFileUrl(String s) {
+        return null;
+    }
 }
