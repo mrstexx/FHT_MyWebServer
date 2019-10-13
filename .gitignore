@@ -1,0 +1,13 @@
+/bin
+/build
+/deploy
+/dist
+/staging
+/out
+
+# Intellij
+# https://intellij-support.jetbrains.com/hc/en-us/articles/206827587-How-to-manage-projects-under-Version-Control-Systems
+/.idea/workspace.xml
+/.idea/tasks.xml
+*.iws
+/.idea/
