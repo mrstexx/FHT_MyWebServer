@@ -40,9 +40,10 @@ public class PluginManagerImpl implements BIF.SWE1.interfaces.PluginManager {
             IllegalAccessException,
             ClassNotFoundException,
             NoSuchMethodException,
-            InvocationTargetException {
+            InvocationTargetException, MalformedURLException {
         Plugin newPlugin = null;
-        Class<?> clazz = Class.forName(plugin);
+        URLClassLoader classLoader = new URLClassLoader(new URL[]{new File("./").toURI().toURL()});
+        Class<?> clazz = Class.forName(plugin, true, classLoader);
         Class<?>[] interfaces = clazz.getInterfaces();
         for (Class i : interfaces) {
             if (i.toString().equals(Plugin.class.toString())) {
