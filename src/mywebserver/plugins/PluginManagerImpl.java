@@ -2,14 +2,21 @@ package mywebserver.plugins;
 
 import BIF.SWE1.interfaces.Plugin;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PluginManagerImpl implements BIF.SWE1.interfaces.PluginManager {
 
-    List<Plugin> plugins;
+    private static final String PLUGIN_EXT = ".jar";
+
+    private List<Plugin> plugins;
 
     public PluginManagerImpl() {
         this.plugins = new ArrayList<>();
@@ -34,12 +41,20 @@ public class PluginManagerImpl implements BIF.SWE1.interfaces.PluginManager {
             ClassNotFoundException,
             NoSuchMethodException,
             InvocationTargetException {
+        Plugin newPlugin = null;
         Class<?> clazz = Class.forName(plugin);
-        Constructor<?> ctor = clazz.getConstructor();
-        Object object = ctor.newInstance();
-        if (!isClassNameContained(plugin)) {
-            this.plugins.add((Plugin) object);
+        Class<?>[] interfaces = clazz.getInterfaces();
+        for (Class i : interfaces) {
+            if (i.toString().equals(Plugin.class.toString())) {
+                Constructor<?> ctor = clazz.getConstructor();
+                newPlugin = (Plugin) ctor.newInstance();
+            }
         }
+        if (newPlugin != null && !isClassNameContained(plugin)) {
+            this.plugins.add(newPlugin);
+            return;
+        }
+        throw new ClassNotFoundException();
     }
 
     private boolean isClassNameContained(String className) {

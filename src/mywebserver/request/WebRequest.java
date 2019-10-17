@@ -44,6 +44,7 @@ public class WebRequest implements Request {
                     continue;
                 }
                 if (!parseHeaderMetadata(headerLine)) {
+                    // TODO add check for empty line
                     if (this.requestMethod.equals(ERequestMethods.POST.getValue())) {
                         parseRequestBody(headerLine);
                     }
