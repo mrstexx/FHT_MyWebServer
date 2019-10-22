@@ -1,9 +1,9 @@
 /bin
 /build
-/deploy
 /dist
 /staging
 /out
+/deploy/tmp-static-files/foo*.txt
 
 # Intellij
 # https://intellij-support.jetbrains.com/hc/en-us/articles/206827587-How-to-manage-projects-under-Version-Control-Systems

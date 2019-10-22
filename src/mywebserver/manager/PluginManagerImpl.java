@@ -1,6 +1,7 @@
-package mywebserver.plugins;
+package mywebserver.manager;
 
 import BIF.SWE1.interfaces.Plugin;
+import BIF.SWE1.interfaces.PluginManager;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -10,9 +11,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class PluginManagerImpl implements BIF.SWE1.interfaces.PluginManager {
+public class PluginManagerImpl implements PluginManager {
 
     private static final String PLUGIN_EXT = ".jar";
 

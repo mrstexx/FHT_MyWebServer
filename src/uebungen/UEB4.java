@@ -3,7 +3,7 @@ package uebungen;
 import BIF.SWE1.interfaces.PluginManager;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
-import mywebserver.plugins.PluginManagerImpl;
+import mywebserver.manager.PluginManagerImpl;
 import mywebserver.plugins.TestPlugin;
 import mywebserver.request.WebRequest;
 import mywebserver.response.WebResponse;
