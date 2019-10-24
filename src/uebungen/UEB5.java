@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class UEB5 {
 
-    private static final String TMP_STATIC_FILES = "tmp-static-files";
+    private static final String TMP_STATIC_FILES = "deploy/tmp-static-files";
 
     public void helloWorld() {
         System.out.println("Hello, World");

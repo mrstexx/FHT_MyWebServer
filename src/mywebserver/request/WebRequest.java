@@ -29,65 +29,59 @@ public class WebRequest implements Request {
         if (this.inputStream == null) {
             return;
         }
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
-            String headerLine = "";
-            boolean isFirstLine = true;
-            while ((headerLine = bufferedReader.readLine()) != null) {
-                if (headerLine.isEmpty()) {
-                    continue;
-                }
-                if (isFirstLine) {
-                    parseHeaderMethod(headerLine);
-                    isFirstLine = false;
-                    continue;
-                }
-                if (!parseHeaderMetadata(headerLine)) {
-                    // TODO add check for empty line
-                    if (this.requestMethod.equals(ERequestMethods.POST.getValue())) {
-                        parseRequestBody(headerLine);
-                    }
-                }
+            parseHeaderMethod(bufferedReader);
+            parseHeaderMetadata(bufferedReader);
+            if (this.requestMethod.equals(ERequestMethods.POST.getValue())) {
+                parseRequestBody(bufferedReader);
             }
-        } catch (IOException error) {
-            System.out.println("WebRequest: An error occurred while reading input stream!");
-            error.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private void parseRequestBody(String body) {
-        this.requestBody += body;
+    private void parseRequestBody(BufferedReader bufferedReader) throws IOException {
+        StringBuilder requestBody = new StringBuilder();
+        String bodyLine = "";
+        while ((bodyLine = bufferedReader.readLine()) != null) {
+            requestBody.append(bodyLine);
+        }
+        this.requestBody = requestBody.toString();
     }
 
-    private void parseHeaderMethod(String headerLine) {
-        StringTokenizer parser = new StringTokenizer(headerLine);
-        String method = parser.nextToken().toUpperCase();
-        String url = "";
-        if (parser.hasMoreTokens()) {
-            url = parser.nextToken();
-        }
-        if (ERequestMethods.contains(method)) {
-            this.requestMethod = method;
-            // WebURL.isValidURL()
-            // TODO better handling for isValidURL
-            if (!url.isEmpty()) {
-                this.rawPath = url;
-                this.isValidRequest = true;
+    private void parseHeaderMethod(BufferedReader bufferedReader) throws IOException {
+        String headerLine = bufferedReader.readLine();
+        if (headerLine != null && !headerLine.isEmpty()) {
+            StringTokenizer parser = new StringTokenizer(headerLine);
+            String method = parser.nextToken().toUpperCase();
+            String url = "";
+            if (parser.hasMoreTokens()) {
+                url = parser.nextToken();
+            }
+            if (ERequestMethods.contains(method)) {
+                this.requestMethod = method;
+                // WebURL.isValidURL()
+                // TODO better handling for isValidURL
+                if (!url.isEmpty()) {
+                    this.rawPath = url;
+                    this.isValidRequest = true;
+                }
             }
         }
     }
 
-    private boolean parseHeaderMetadata(String headerLine) {
-        if (this.headers == null) {
-            this.headers = new HashMap<>();
+    private void parseHeaderMetadata(BufferedReader bufferedReader) throws IOException {
+        String headerLine = "";
+        while ((headerLine = bufferedReader.readLine()) != null && !headerLine.isEmpty()) {
+            if (this.headers == null) {
+                this.headers = new HashMap<>();
+            }
+            String[] splitLine = headerLine.split("[:]");
+            if (splitLine.length > 1) {
+                headers.put(splitLine[0].toLowerCase().trim(), splitLine[1].trim());
+            }
         }
-        String[] splitLine = headerLine.split("[:]");
-        if (splitLine.length > 1) {
-            headers.put(splitLine[0].toLowerCase().trim(), splitLine[1].trim());
-            return true;
-        }
-        // return false means end of metadata and taking request body
-        return false;
     }
 
     @Override

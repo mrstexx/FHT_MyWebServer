@@ -20,7 +20,7 @@ public class StaticFilePlugin implements Plugin {
     private static final float PLUGIN_PROBABILITY = 0.1f;
 
     public StaticFilePlugin() {
-        // Empty contr body
+        // Empty constr body
     }
 
     @Override
@@ -28,7 +28,7 @@ public class StaticFilePlugin implements Plugin {
         float pluginProbability = PluginUtil.getDefaultPluginProbability(StaticFilePlugin.class, req);
         String path = req.getUrl().getPath();
         long numberOfSlashes = path.chars().filter(character -> character == '/').count();
-        if (numberOfSlashes > 1) {
+        if (numberOfSlashes > 0) {
             pluginProbability += PLUGIN_PROBABILITY;
         }
         return pluginProbability > 1 ? 1f : pluginProbability;
@@ -38,7 +38,38 @@ public class StaticFilePlugin implements Plugin {
     public Response handle(Request req) {
         Response response = new WebResponse();
         Url url = req.getUrl();
-        File file = new File(url.getPath());
+        if (url.getRawUrl().equals("/")) {
+            handleEmptyFile(response);
+        } else {
+            handleFile(response, url);
+        }
+        return response;
+    }
+
+    private void handleEmptyFile(Response response) {
+        response.setContentType(EMimeType.TEXT_HTML.getValue());
+        response.setStatusCode(EStatusCodes.OK.getCode());
+        try {
+            response.setContent(new FileInputStream(new File(Constants.STATIC_FOLDER_PATH, "index.html")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleNotFoundFile(Response response) {
+        response.setContentType(EMimeType.TEXT_HTML.getValue());
+        response.setStatusCode(EStatusCodes.NOT_FOUND.getCode());
+        try {
+            response.setContent(new FileInputStream(new File(Constants.STATIC_FOLDER_PATH, "404.html")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleFile(Response response, Url url) {
+        String fileName = url.getFileName();
+        String filePath = Constants.STATIC_FOLDER_PATH + Constants.FILE_SEPARATOR + fileName;
+        File file = new File(filePath);
         if (file.exists()) {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
@@ -49,14 +80,7 @@ public class StaticFilePlugin implements Plugin {
                 e.printStackTrace();
             }
         } else {
-            response.setContentType(EMimeType.TEXT_HTML.getValue());
-            response.setStatusCode(EStatusCodes.NOT_FOUND.getCode());
-            try {
-                response.setContent(new FileInputStream(new File(Constants.STATIC_FOLDER_PATH, "404.html")));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            handleNotFoundFile(response);
         }
-        return response;
     }
 }
