@@ -12,7 +12,6 @@ import mywebserver.util.PluginUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StaticFilePlugin implements Plugin {
@@ -39,15 +38,15 @@ public class StaticFilePlugin implements Plugin {
         Response response = new WebResponse();
         Url url = req.getUrl();
         if (url.getRawUrl().equals("/")) {
-            handleEmptyFile(response);
+            handleEmptyFile(response, url.getExtension());
         } else {
             handleFile(response, url);
         }
         return response;
     }
 
-    private void handleEmptyFile(Response response) {
-        response.setContentType(EMimeType.TEXT_HTML.getValue());
+    private void handleEmptyFile(Response response, String extension) {
+        response.setContentType(EMimeType.getValue(extension));
         response.setStatusCode(EStatusCodes.OK.getCode());
         try {
             response.setContent(new FileInputStream(new File(Constants.STATIC_FOLDER_PATH, "index.html")));
@@ -56,8 +55,8 @@ public class StaticFilePlugin implements Plugin {
         }
     }
 
-    private void handleNotFoundFile(Response response) {
-        response.setContentType(EMimeType.TEXT_HTML.getValue());
+    private void handleNotFoundFile(Response response, String extensions) {
+        response.setContentType(EMimeType.getValue(extensions));
         response.setStatusCode(EStatusCodes.NOT_FOUND.getCode());
         try {
             response.setContent(new FileInputStream(new File(Constants.STATIC_FOLDER_PATH, "404.html")));
@@ -73,14 +72,14 @@ public class StaticFilePlugin implements Plugin {
         if (file.exists()) {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
-                response.setContentType(EMimeType.TEXT_HTML.getValue());
+                response.setContentType(EMimeType.getValue(url.getExtension()));
                 response.setStatusCode(EStatusCodes.OK.getCode());
                 response.setContent(fileInputStream);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            handleNotFoundFile(response);
+            handleNotFoundFile(response, url.getExtension());
         }
     }
 }

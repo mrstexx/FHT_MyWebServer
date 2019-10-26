@@ -3,6 +3,9 @@ package uebungen;
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.PluginManager;
 import BIF.SWE1.interfaces.Request;
+import mywebserver.manager.PluginManagerImpl;
+import mywebserver.plugins.*;
+import mywebserver.request.WebRequest;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -10,27 +13,33 @@ import java.time.LocalDate;
 public class UEB6 {
 
     public void helloWorld() {
-
+        System.out.println("Hello, world!");
     }
 
     public Request getRequest(InputStream inputStream) {
-        return null;
+        return new WebRequest(inputStream);
     }
 
     public PluginManager getPluginManager() {
-        return null;
+        PluginManager pluginManager = new PluginManagerImpl();
+        pluginManager.add(new TestPlugin());
+        pluginManager.add(new StaticFilePlugin());
+        pluginManager.add(new TemperaturePlugin());
+        pluginManager.add(new NavigationPlugin());
+        pluginManager.add(new ToLowerPlugin());
+        return pluginManager;
     }
 
     public Plugin getTemperaturePlugin() {
-        return null;
+        return new TemperaturePlugin();
     }
 
     public Plugin getNavigationPlugin() {
-        return null;
+        return new NavigationPlugin();
     }
 
     public Plugin getToLowerPlugin() {
-        return null;
+        return new ToLowerPlugin();
     }
 
     public String getTemperatureUrl(LocalDate localDate, LocalDate localDate1) {
@@ -46,6 +55,6 @@ public class UEB6 {
     }
 
     public String getToLowerUrl() {
-        return null;
+        return "localhost:8080/tolower/";
     }
 }

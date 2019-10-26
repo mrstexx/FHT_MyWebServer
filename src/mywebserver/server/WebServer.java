@@ -1,26 +1,37 @@
 package mywebserver.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 
 public class WebServer {
 
+    private static final Logger LOG = LogManager.getLogger();
     private ServerSocket serverSocket;
+
 
     public WebServer(int port) throws IOException {
         this.serverSocket = new ServerSocket(port);
+        this.serverSocket.setReuseAddress(true);
     }
 
-    public void start() throws IOException {
+    public void start() {
+        LOG.info("Waiting for client to connect ...");
         while (true) {
-            ClientHandler clientHandler = new ClientHandler(this.serverSocket.accept());
-            Thread thread = new Thread(clientHandler);
-            thread.start();
+            try {
+                ClientHandler clientHandler = new ClientHandler(this.serverSocket.accept());
+                new Thread(clientHandler).start();
+                LOG.info("A new client is connected: {}", this.serverSocket);
+            } catch (IOException e) {
+                LOG.error("Unable to process client request\n", e);
+            }
         }
     }
 
     public void stop() throws IOException {
+        LOG.info("Server connection on port {} closed.", this.serverSocket.getLocalPort());
         this.serverSocket.close();
-        System.out.println("Closed connections.");
     }
 }

@@ -1,28 +1,31 @@
 package mywebserver;
 
 import mywebserver.server.WebServer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class Main {
 
     private static final int DEFAULT_PORT = 8080;
+    private static final Logger LOG = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
         WebServer webServer = null;
         try {
-            System.out.println("Starting server at localhost:" + DEFAULT_PORT);
+            LOG.info("Starting webserver at 127.0.0.1:" + DEFAULT_PORT);
             webServer = new WebServer(DEFAULT_PORT);
             webServer.start();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e);
         } finally {
             try {
-                System.out.println("Server stopped.");
+                LOG.info("Server stopped.");
                 assert webServer != null;
                 webServer.stop();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error(e);
             }
         }
     }
