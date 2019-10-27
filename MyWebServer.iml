@@ -12,5 +12,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="BIF-SWE1.Interfaces" />
     <orderEntry type="library" name="log4j-api-2.11.2" level="project" />
+    <orderEntry type="library" name="org.postgresql:postgresql:42.2.6" level="project" />
   </component>
 </module>
