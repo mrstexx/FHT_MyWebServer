@@ -1,9 +1,12 @@
 package mywebserver.server;
 
 import BIF.SWE1.interfaces.Plugin;
+import BIF.SWE1.interfaces.PluginManager;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
+import mywebserver.manager.PluginManagerImpl;
 import mywebserver.plugins.StaticFilePlugin;
+import mywebserver.plugins.ToLowerPlugin;
 import mywebserver.request.WebRequest;
 import mywebserver.response.WebResponse;
 import org.apache.logging.log4j.LogManager;
@@ -20,9 +23,12 @@ public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private InputStream inputStream;
     private OutputStream outputStream;
+    private PluginManager pluginManager;
 
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
+        this.pluginManager = new PluginManagerImpl();
+        registerPlugins();
     }
 
     @Override
@@ -34,9 +40,18 @@ public class ClientHandler implements Runnable {
             Response response = new WebResponse();
             Request request = new WebRequest(this.inputStream);
 
-            Plugin staticFilePlugin = new StaticFilePlugin();
-            if (staticFilePlugin.canHandle(request) > 0) {
-                response = staticFilePlugin.handle(request);
+            float max = 0f;
+            Plugin pluginToHandle = null;
+
+            for (Plugin plugin : pluginManager.getPlugins()) {
+                float pluginProbability = plugin.canHandle(request);
+                if (pluginProbability > max) {
+                    max = pluginProbability;
+                    pluginToHandle = plugin;
+                }
+            }
+            if (pluginToHandle != null) {
+                response = pluginToHandle.handle(request);
             }
             response.send(this.outputStream);
         } catch (Exception e) {
@@ -44,6 +59,11 @@ public class ClientHandler implements Runnable {
         } finally {
             closeStreams();
         }
+    }
+
+    private void registerPlugins() {
+        this.pluginManager.add(new ToLowerPlugin());
+        this.pluginManager.add(new StaticFilePlugin());
     }
 
     private void closeStreams() {

@@ -43,9 +43,9 @@ public class WebRequest implements Request {
 
     private void parseRequestBody(BufferedReader bufferedReader) throws IOException {
         StringBuilder requestBody = new StringBuilder();
-        String bodyLine = "";
-        while ((bodyLine = bufferedReader.readLine()) != null) {
-            requestBody.append(bodyLine);
+        while (bufferedReader.ready()) {
+            char temp = (char) bufferedReader.read();
+            requestBody.append(temp);
         }
         this.requestBody = requestBody.toString();
     }
@@ -81,6 +81,7 @@ public class WebRequest implements Request {
             if (splitLine.length > 1) {
                 headers.put(splitLine[0].toLowerCase().trim(), splitLine[1].trim());
             }
+            System.out.println("-> " + headerLine);
         }
     }
 

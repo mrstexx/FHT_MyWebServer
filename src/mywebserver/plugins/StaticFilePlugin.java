@@ -38,15 +38,15 @@ public class StaticFilePlugin implements Plugin {
         Response response = new WebResponse();
         Url url = req.getUrl();
         if (url.getRawUrl().equals("/")) {
-            handleEmptyFile(response, url.getExtension());
+            handleEmptyFile(response);
         } else {
             handleFile(response, url);
         }
         return response;
     }
 
-    private void handleEmptyFile(Response response, String extension) {
-        response.setContentType(EMimeType.getValue(extension));
+    private void handleEmptyFile(Response response) {
+        response.setContentType(EMimeType.TEXT_HTML.getValue());
         response.setStatusCode(EStatusCodes.OK.getCode());
         try {
             response.setContent(new FileInputStream(new File(Constants.STATIC_FOLDER_PATH, "index.html")));
