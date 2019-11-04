@@ -7,12 +7,12 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.util.Properties;
 
-public class PropertyConfigManager {
+public class PropertyConfig {
 
-    private static final Logger LOG = LogManager.getLogger(PropertyConfigManager.class);
+    private static final Logger LOG = LogManager.getLogger(PropertyConfig.class);
     private Properties properties;
 
-    public PropertyConfigManager(String fileName) {
+    public PropertyConfig(String fileName) {
         this.properties = new Properties();
         readProperties(fileName);
     }

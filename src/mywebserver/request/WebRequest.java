@@ -81,7 +81,6 @@ public class WebRequest implements Request {
             if (splitLine.length > 1) {
                 headers.put(splitLine[0].toLowerCase().trim(), splitLine[1].trim());
             }
-            System.out.println("-> " + headerLine);
         }
     }
 

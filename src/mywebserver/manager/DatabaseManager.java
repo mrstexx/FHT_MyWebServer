@@ -11,6 +11,7 @@ public class DatabaseManager {
 
     private static final Logger LOG = LogManager.getLogger(DatabaseManager.class);
     private static final String CONFIG = "conf.properties";
+    private static DatabaseManager manager;
 
     private String url;
     private String user;
@@ -18,28 +19,23 @@ public class DatabaseManager {
 
     private Connection connection = null;
 
-    public DatabaseManager() {
+    private DatabaseManager() {
         initConnectionData();
     }
 
     private void initConnectionData() {
-        PropertyConfigManager propertyConfigManager = new PropertyConfigManager(CONFIG);
-        this.url = propertyConfigManager.getPropertyValue(EConfigProperties.URL.getValue());
-        this.user = propertyConfigManager.getPropertyValue(EConfigProperties.USER.getValue());
-        this.password = propertyConfigManager.getPropertyValue(EConfigProperties.PASSWORD.getValue());
+        PropertyConfig propertyConfig = new PropertyConfig(CONFIG);
+        this.url = propertyConfig.getPropertyValue(EConfigProperties.URL.getValue());
+        this.user = propertyConfig.getPropertyValue(EConfigProperties.USER.getValue());
+        this.password = propertyConfig.getPropertyValue(EConfigProperties.PASSWORD.getValue());
     }
 
-    public Connection connect() {
-        try {
-            this.connection = DriverManager.getConnection(this.url, this.user, this.password);
-            LOG.info("Connection to database succeeded.");
-        } catch (SQLException e) {
-            LOG.error("Connection to database failed", e);
-        }
+    private Connection connect() throws SQLException {
+        this.connection = DriverManager.getConnection(this.url, this.user, this.password);
         return this.connection;
     }
 
-    public void disconnect() {
+    private void disconnect() {
         if (this.connection != null) {
             try {
                 this.connection.close();
@@ -48,6 +44,21 @@ public class DatabaseManager {
                 LOG.error(e);
             }
         }
+    }
+
+    public static DatabaseManager getInstance() {
+        if (manager == null) {
+            return new DatabaseManager();
+        }
+        return manager;
+    }
+
+    public Connection getConnection() throws SQLException {
+        return connect();
+    }
+
+    public void closeConnection() {
+        disconnect();
     }
 
 }
