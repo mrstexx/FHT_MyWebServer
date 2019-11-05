@@ -43,7 +43,7 @@ public class WebServer {
     }
 
     private void handleSensors() {
-        TemperatureSensor temperatureSensor = new TemperatureSensor();
-        new Thread(temperatureSensor).start();
+        // TemperatureSensor temperatureSensor = new TemperatureSensor();
+        // new Thread(temperatureSensor).start();
     }
 }
