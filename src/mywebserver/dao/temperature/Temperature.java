@@ -1,4 +1,4 @@
-package mywebserver.model.temperature;
+package mywebserver.dao.temperature;
 
 import java.util.Date;
 

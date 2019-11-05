@@ -6,10 +6,6 @@ import BIF.SWE1.interfaces.Response;
 
 public class TemperaturePlugin implements Plugin {
 
-    public TemperaturePlugin() {
-        
-    }
-
     @Override
     public float canHandle(Request req) {
         return 0;
