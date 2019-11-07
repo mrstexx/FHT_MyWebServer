@@ -13,6 +13,7 @@ public class TemperatureDAO implements ITemperatureDAO {
     private static final String INSERT_QUERY_TEMPLATE = "INSERT INTO temperature (value, date) VALUES(?, ?);";
     private static final String SELECT_ALL = "SELECT * FROM temperature";
     private static final String SELECT_RANGE = "SELECT * FROM temperature WHERE temp_id > ? AND temp_id <= ?";
+    private static final String COUNT_RECORDS = "SELECT count(*) AS rowcount FROM temperature";
 
     @Override
     public List<Temperature> getAllTemperatures(Connection connection) {
@@ -82,6 +83,31 @@ public class TemperatureDAO implements ITemperatureDAO {
     @Override
     public Temperature getTemperatureByID(Connection connection, long id) {
         return null;
+    }
+
+    @Override
+    public long getNumberOfRecords(Connection connection) {
+        PreparedStatement preparedStatement = null;
+        long numberOfResults = 0;
+        try {
+            preparedStatement = connection.prepareStatement(COUNT_RECORDS);
+            ResultSet result = preparedStatement.executeQuery();
+            while (result.next()) {
+                numberOfResults = result.getLong("rowcount");
+            }
+            result.close();
+        } catch (SQLException e) {
+            LOG.error("Temperature count failed", e);
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    LOG.error("Temperature closing count query failed", e);
+                }
+            }
+        }
+        return numberOfResults;
     }
 
     @Override

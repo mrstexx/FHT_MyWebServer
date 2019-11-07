@@ -22,15 +22,18 @@ public class TemperatureUtil {
     private static final String PARAM_RESULT = "result";
     private static final String PARAM_VALUE = "value";
     private static final String PARAM_DATE = "date";
+    private static final String PARAM_RECORDS = "recordsNumber";
 
     private static SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-    public static JSONObject getTemperaturePage(int page, int numberOfRecords) {
+    public static JSONObject getTemperaturePage(int page, int numberOfPageRecords) {
         JSONObject temperaturePage = new JSONObject();
         TemperatureDAO temperatureDAO = new TemperatureDAO();
         List<Temperature> temperatureList = new ArrayList<>();
+        long countOfRecords = 0;
         try (Connection connection = DatabaseManager.getInstance().getConnection()) {
-            temperatureList = temperatureDAO.getTemperatureRange(connection, page, numberOfRecords);
+            temperatureList = temperatureDAO.getTemperatureRange(connection, page, numberOfPageRecords);
+            countOfRecords = temperatureDAO.getNumberOfRecords(connection);
         } catch (SQLException e) {
             LOG.error("Getting temperature page failed", e);
         }
@@ -44,6 +47,7 @@ public class TemperatureUtil {
             temperatureResult.add(tempObject);
         }
         temperaturePage.put(PARAM_RESULT, temperatureResult);
+        temperaturePage.put(PARAM_RECORDS, countOfRecords);
         return temperaturePage;
     }
 

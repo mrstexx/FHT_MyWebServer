@@ -1,24 +1,32 @@
+const RECORDS_PER_PAGE = 20;
+
 const tableBody = $("#tableBody")[0];
 const nextBtn = $("#next");
 const prevBtn = $("#prev");
 
 let pageNumber = 1;
+let numberOfRecords = 0;
 
 $(() => {
     handleAction();
 });
 
 nextBtn.on('click', () => {
+    const maxNumberOfPages = Math.ceil(numberOfRecords / RECORDS_PER_PAGE);
     pageNumber++;
-    handleAction();
+    if (pageNumber <= maxNumberOfPages) {
+        handleAction();
+    }
 });
 
 prevBtn.on('click', () => {
     pageNumber--;
+    if (pageNumber >= 1) {
+        handleAction();
+    }
     if (pageNumber < 1) {
         pageNumber = 1;
     }
-    handleAction();
 });
 
 const handleAction = () => {
@@ -28,8 +36,13 @@ const handleAction = () => {
         dataType: "json",
         contentType: "application/x-www-form-urlencoded",
         success: (response) => {
-            if (response != null && response.result) {
-                renderTable(response.result);
+            if (response != null) {
+                if (response.result) {
+                    renderTable(response.result);
+                }
+                if (response.recordsNumber) {
+                    numberOfRecords = response.recordsNumber;
+                }
             }
         }
     });

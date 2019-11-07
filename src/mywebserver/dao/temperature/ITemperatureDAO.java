@@ -13,6 +13,8 @@ public interface ITemperatureDAO {
 
     Temperature getTemperatureByID(Connection connection, long id);
 
+    long getNumberOfRecords(Connection connection);
+
     void insertTemperature(Connection connection, Temperature temperature);
 
     void deleteTemperature(Connection connection, Temperature temperature);
