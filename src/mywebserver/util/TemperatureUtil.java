@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TemperatureUtil {
@@ -35,8 +36,27 @@ public class TemperatureUtil {
             temperatureList = temperatureDAO.getTemperatureRange(connection, page, numberOfPageRecords);
             countOfRecords = temperatureDAO.getNumberOfRecords(connection);
         } catch (SQLException e) {
-            LOG.error("Getting temperature page failed", e);
+            LOG.error("Getting temperature connection page failed", e);
         }
+        makeJSONStructure(temperaturePage, temperatureList);
+        temperaturePage.put(PARAM_RECORDS, countOfRecords);
+        return temperaturePage;
+    }
+
+    public static JSONObject getTemperaturesByDate(Date date) {
+        JSONObject result = new JSONObject();
+        TemperatureDAO temperatureDAO = new TemperatureDAO();
+        List<Temperature> temperatureList = new ArrayList<>();
+        try (Connection connection = DatabaseManager.getInstance().getConnection()) {
+            temperatureList = temperatureDAO.getTemperaturesByDate(connection, date);
+        } catch (SQLException e) {
+            LOG.error("Getting temperature by date connection failed", e);
+        }
+        makeJSONStructure(result, temperatureList);
+        return result;
+    }
+
+    private static void makeJSONStructure(JSONObject result, List<Temperature> temperatureList) {
         JSONArray temperatureResult = new JSONArray();
         for (Temperature temperature : temperatureList) {
             JSONObject tempObject = new JSONObject();
@@ -46,9 +66,6 @@ public class TemperatureUtil {
             tempObject.put(PARAM_DATE, formatter.format(temperature.getDate()));
             temperatureResult.add(tempObject);
         }
-        temperaturePage.put(PARAM_RESULT, temperatureResult);
-        temperaturePage.put(PARAM_RECORDS, countOfRecords);
-        return temperaturePage;
+        result.put(PARAM_RESULT, temperatureResult);
     }
-
 }

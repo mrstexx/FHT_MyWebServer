@@ -1,6 +1,7 @@
 package mywebserver.dao.temperature;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.List;
 
 public interface ITemperatureDAO {
@@ -9,7 +10,7 @@ public interface ITemperatureDAO {
 
     List<Temperature> getTemperatureRange(Connection connection, int pageNumber, int numberOfResults);
 
-    List<Temperature> getTemperaturesByDate(Connection connection);
+    List<Temperature> getTemperaturesByDate(Connection connection, Date date);
 
     Temperature getTemperatureByID(Connection connection, long id);
 

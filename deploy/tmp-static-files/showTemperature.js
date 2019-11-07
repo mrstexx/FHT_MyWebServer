@@ -4,34 +4,38 @@ const tableBody = $("#tableBody")[0];
 const nextBtn = $("#next");
 const prevBtn = $("#prev");
 
+const datePickerForm = $("#searchByDateForm");
+const datePicker = $("#datePicker");
+
 let pageNumber = 1;
 let numberOfRecords = 0;
 
 $(() => {
-    handleAction();
+    /* on page opening, render data from first page */
+    handleAction("/temperature?temperature_plugin=true&page=" + pageNumber);
 });
 
 nextBtn.on('click', () => {
     const maxNumberOfPages = Math.ceil(numberOfRecords / RECORDS_PER_PAGE);
     pageNumber++;
     if (pageNumber <= maxNumberOfPages) {
-        handleAction();
+        handleAction("/temperature?temperature_plugin=true&page=" + pageNumber);
     }
 });
 
 prevBtn.on('click', () => {
     pageNumber--;
     if (pageNumber >= 1) {
-        handleAction();
+        handleAction("/temperature?temperature_plugin=true&page=" + pageNumber);
     }
     if (pageNumber < 1) {
         pageNumber = 1;
     }
 });
 
-const handleAction = () => {
+const handleAction = (getUrl) => {
     $.ajax({
-        url: "/temperature?temperature_plugin=true&page=" + pageNumber,
+        url: getUrl,
         type: "GET",
         dataType: "json",
         contentType: "application/x-www-form-urlencoded",
@@ -56,3 +60,12 @@ const renderTable = (result) => {
     }
     $(tableBody).prepend(tableContent);
 };
+
+datePickerForm.on('submit', (e) => {
+    e.preventDefault();
+    const date = datePicker.val();
+    if (date.length > 0) {
+        handleAction("/temperature?temperature_plugin=true&date=" + date);
+    }
+    pageNumber = 0;
+});

@@ -14,6 +14,7 @@ public class TemperatureDAO implements ITemperatureDAO {
     private static final String SELECT_ALL = "SELECT * FROM temperature";
     private static final String SELECT_RANGE = "SELECT * FROM temperature WHERE temp_id > ? AND temp_id <= ?";
     private static final String COUNT_RECORDS = "SELECT count(*) AS rowcount FROM temperature";
+    private static final String SELECT_BY_DATE = "SELECT * FROM temperature WHERE CAST(date as DATE) = ?";
 
     @Override
     public List<Temperature> getAllTemperatures(Connection connection) {
@@ -62,6 +63,28 @@ public class TemperatureDAO implements ITemperatureDAO {
         return temperatureList;
     }
 
+    @Override
+    public List<Temperature> getTemperaturesByDate(Connection connection, java.util.Date date) {
+        List<Temperature> temperatureList = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_BY_DATE);
+            preparedStatement.setDate(1, new Date(date.getTime()));
+            temperatureList = executeGetQuery(preparedStatement);
+        } catch (SQLException e) {
+            LOG.error("Temperature selection by date failed", e);
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    LOG.error("Temperature closing selection by date failed", e);
+                }
+            }
+        }
+        return temperatureList;
+    }
+
     private List<Temperature> executeGetQuery(PreparedStatement preparedStatement) throws SQLException {
         List<Temperature> temperaturesList = new ArrayList<>();
         ResultSet result = preparedStatement.executeQuery();
@@ -73,11 +96,6 @@ public class TemperatureDAO implements ITemperatureDAO {
         }
         result.close();
         return temperaturesList;
-    }
-
-    @Override
-    public List<Temperature> getTemperaturesByDate(Connection connection) {
-        return null;
     }
 
     @Override
