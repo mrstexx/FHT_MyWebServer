@@ -9,6 +9,8 @@ import mywebserver.response.EStatusCodes;
 import mywebserver.response.WebResponse;
 import mywebserver.util.Constants;
 import mywebserver.util.PluginUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +18,7 @@ import java.io.IOException;
 
 public class StaticFilePlugin implements Plugin {
 
+    private static final Logger LOG = LogManager.getLogger(StaticFilePlugin.class);
     private static final float PLUGIN_PROBABILITY = 0.1f;
 
     public StaticFilePlugin() {
@@ -51,7 +54,7 @@ public class StaticFilePlugin implements Plugin {
         try {
             response.setContent(new FileInputStream(new File(Constants.STATIC_FOLDER_PATH, "index.html")));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
     }
 
@@ -61,7 +64,7 @@ public class StaticFilePlugin implements Plugin {
         try {
             response.setContent(new FileInputStream(new File(Constants.STATIC_FOLDER_PATH, "404.html")));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
     }
 
@@ -69,14 +72,14 @@ public class StaticFilePlugin implements Plugin {
         String fileName = url.getFileName();
         String filePath = Constants.STATIC_FOLDER_PATH + Constants.FILE_SEPARATOR + fileName;
         File file = new File(filePath);
-        if (file.exists()) {
+        if (file.exists() && file.isFile()) {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
                 response.setContentType(EMimeType.getValue(url.getExtension()));
                 response.setStatusCode(EStatusCodes.OK.getCode());
                 response.setContent(fileInputStream);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error(e);
             }
         } else {
             handleNotFoundFile(response, url.getExtension());

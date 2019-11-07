@@ -13,10 +13,6 @@ import java.nio.charset.StandardCharsets;
 
 public class ToLowerPlugin implements Plugin {
 
-    public ToLowerPlugin() {
-
-    }
-
     @Override
     public float canHandle(Request req) {
         return PluginUtil.getDefaultPluginProbability(ToLowerPlugin.class, req);
@@ -35,7 +31,7 @@ public class ToLowerPlugin implements Plugin {
         }
         response.setStatusCode(EStatusCodes.OK.getCode());
         response.setContentType(EMimeType.TEXT_PLAIN.getValue());
-        response.setContent(!value.isEmpty() ? value.toLowerCase() : "Not found: Bitte geben Sie einen Text ein");
+        response.setContent(!value.isEmpty() ? value.trim().toLowerCase() : "Not found: Bitte geben Sie einen Text ein");
         return response;
     }
 }

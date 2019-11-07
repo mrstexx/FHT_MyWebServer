@@ -15,7 +15,7 @@ Check doxygen documentation
 * Using Temperature Plugin
 
 ### Database
-Used database: Postgresql. Before usage, please create table and update configuration file database under resourses/conf.properties
+Used database: Postgresql. Before usage, please create table and update configuration file database under resources/conf.properties
 ```postgresql
 create table temperature
 (

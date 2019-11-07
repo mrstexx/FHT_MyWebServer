@@ -20,17 +20,18 @@ public class PluginUtil {
         String[] urlSegments = url.getSegments();
 
         for (String segment : urlSegments) {
-            if (segment.contains(pluginName)) {
+            if (segment.equals(pluginName)) {
                 pluginProbability += DEFAULT_PLUGIN_PROBABILITY;
             }
         }
 
+        // check for case pluginname_plugin=true
         if (url.getParameterCount() > 0) {
             Map<String, String> parameters = url.getParameter();
             String targetParameterName = pluginName + PLUGIN_SUFFIX;
             String targetParameterValue = parameters.get(targetParameterName);
             if (targetParameterValue != null && targetParameterValue.equals("true")) {
-                pluginProbability += 0.4f;
+                pluginProbability += DEFAULT_PLUGIN_PROBABILITY;
             }
         }
         return pluginProbability > 1 ? 1f : pluginProbability;

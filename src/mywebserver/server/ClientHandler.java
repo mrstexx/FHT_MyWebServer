@@ -26,7 +26,7 @@ public class ClientHandler implements Runnable {
     private OutputStream outputStream;
     private PluginManager pluginManager;
 
-    public ClientHandler(Socket clientSocket) {
+    ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.pluginManager = new PluginManagerImpl();
         registerPlugins();
