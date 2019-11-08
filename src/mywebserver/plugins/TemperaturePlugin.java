@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 public class TemperaturePlugin implements Plugin {
 
@@ -29,7 +30,7 @@ public class TemperaturePlugin implements Plugin {
         float defaultProbability = PluginUtil.getDefaultPluginProbability(TemperaturePlugin.class, req);
         Url url = req.getUrl();
         String[] segments = url.getSegments();
-        if (isRESTRequest(segments)) {
+        if (segments.length > 0 && isRESTRequest(segments[0])) {
             defaultProbability += REST_PLUGIN_PROBABILITY;
         }
         return defaultProbability < 1 ? defaultProbability : 1;
@@ -39,7 +40,7 @@ public class TemperaturePlugin implements Plugin {
     public Response handle(Request req) {
         Url url = req.getUrl();
         String[] segments = url.getSegments();
-        if (isRESTRequest(segments)) {
+        if (isRESTRequest(segments[0])) {
             return handleRESTRequest(url);
         }
         return handlePageRequest(url);
@@ -47,9 +48,24 @@ public class TemperaturePlugin implements Plugin {
 
     private Response handleRESTRequest(Url url) {
         Response response = new WebResponse();
+        String[] urlSegments = url.getSegments();
+        if (urlSegments.length != 4) {
+            return RESTBadRequest();
+        }
+        String[] dateSegment = Arrays.copyOfRange(urlSegments, 1, urlSegments.length);
+        String content = TemperatureAPI.getTemperatureByStringAsJSON(String.join("/", dateSegment));
         response.setStatusCode(EStatusCodes.OK.getCode());
         response.setContentType(EMimeType.TEXT_JSON.getValue());
-        response.setContent("");
+        response.setContent(content);
+        return response;
+    }
+
+    private Response RESTBadRequest() {
+        Response response = new WebResponse();
+        response.setStatusCode(EStatusCodes.BAD_REQUEST.getCode());
+        response.setContentType(EMimeType.TEXT_PLAIN.getValue());
+        // TODO use static plugin response maybe
+        response.setContent(EStatusCodes.BAD_REQUEST.getValue());
         return response;
     }
 
@@ -63,7 +79,7 @@ public class TemperaturePlugin implements Plugin {
                 content = TemperatureAPI.getTemperaturePageAsJSONString(pageNumber, RECORDS_NUMBER_PER_PAGE);
             } else if (url.getParameter().containsKey(PARAM_DATE)) {
                 try {
-                    content = TemperatureAPI.getTemperaturesByDateASJSON(new SimpleDateFormat("yyyy-MM-dd").parse(url.getParameter().get(PARAM_DATE)));
+                    content = TemperatureAPI.getTemperaturesByDateAsJSON(new SimpleDateFormat("yyyy-MM-dd").parse(url.getParameter().get(PARAM_DATE)));
                 } catch (ParseException e) {
                     LOG.error("Unable to parse date format", e);
                 }
@@ -75,12 +91,7 @@ public class TemperaturePlugin implements Plugin {
         return response;
     }
 
-    private boolean isRESTRequest(String[] segments) {
-        for (String segment : segments) {
-            if (segment.equals(REST_API_SEGMENT)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean isRESTRequest(String firstSegments) {
+        return firstSegments.equals(REST_API_SEGMENT);
     }
 }

@@ -23,7 +23,18 @@ public class TemperatureAPI {
      * @param date Date to get temperatures of
      * @return String of JSON object with results
      */
-    public static String getTemperaturesByDateASJSON(Date date) {
+    public static String getTemperaturesByDateAsJSON(Date date) {
         return TemperatureUtil.getTemperaturesByDate(date).toJSONString();
+    }
+
+    /**
+     * Function used to get temperature with passed date. Also used for GetTemperature REST API.
+     * Date form: yyyy/MM/dd
+     *
+     * @param date String value of date to get temperature of
+     * @return String of JSON object with results
+     */
+    public static String getTemperatureByStringAsJSON(String date) {
+        return TemperatureUtil.getTemperaturesByString(date).toJSONString();
     }
 }

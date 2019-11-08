@@ -12,10 +12,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TemperatureUtil {
 
@@ -24,8 +29,12 @@ public class TemperatureUtil {
     private static final String PARAM_VALUE = "value";
     private static final String PARAM_DATE = "date";
     private static final String PARAM_RECORDS = "recordsNumber";
+    private static final String PARAM_ERROR = "error";
 
-    private static SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private static SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd");
+    private static DateTimeFormatter strictDateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd", Locale.GERMANY)
+            .withResolverStyle(ResolverStyle.STRICT);
 
     public static JSONObject getTemperaturePage(int page, int numberOfPageRecords) {
         JSONObject temperaturePage = new JSONObject();
@@ -56,6 +65,31 @@ public class TemperatureUtil {
         return result;
     }
 
+    public static JSONObject getTemperaturesByString(String dateValue) {
+        Date date = getDateFromString(dateValue);
+        if (date != null) {
+            return getTemperaturesByDate(date);
+        }
+        return getFailureJSONStructure();
+    }
+
+    private static Date getDateFromString(String dateValue) {
+        Date date = null;
+        try {
+            strictDateFormatter.parse(dateValue);
+            date = dateFormatter.parse(dateValue);
+        } catch (DateTimeParseException | ParseException e) {
+            LOG.warn("Parsing string date was not successful");
+        }
+        return date;
+    }
+
+    private static JSONObject getFailureJSONStructure() {
+        JSONObject resultObject = new JSONObject();
+        resultObject.put(PARAM_ERROR, "An error occurred due to wrong request.");
+        return resultObject;
+    }
+
     private static void makeJSONStructure(JSONObject result, List<Temperature> temperatureList) {
         JSONArray temperatureResult = new JSONArray();
         for (Temperature temperature : temperatureList) {
@@ -63,7 +97,7 @@ public class TemperatureUtil {
             tempObject.put(PARAM_VALUE, BigDecimal.valueOf(temperature.getValue())
                     .setScale(1, RoundingMode.HALF_UP)
                     .doubleValue());
-            tempObject.put(PARAM_DATE, formatter.format(temperature.getDate()));
+            tempObject.put(PARAM_DATE, dateTimeFormatter.format(temperature.getDate()));
             temperatureResult.add(tempObject);
         }
         result.put(PARAM_RESULT, temperatureResult);
