@@ -55,7 +55,7 @@ public class TemperaturePlugin implements Plugin {
         String[] dateSegment = Arrays.copyOfRange(urlSegments, 1, urlSegments.length);
         String content = TemperatureAPI.getTemperatureData(String.join("/", dateSegment));
         response.setStatusCode(EStatusCodes.OK.getCode());
-        response.setContentType(EMimeType.TEXT_JSON.getValue());
+        response.setContentType(EMimeType.APPLICATION_JSON.getValue());
         response.setContent(content);
         return response;
     }
@@ -86,7 +86,7 @@ public class TemperaturePlugin implements Plugin {
             }
         }
         response.setStatusCode(EStatusCodes.OK.getCode());
-        response.setContentType(EMimeType.TEXT_JSON.getValue());
+        response.setContentType(EMimeType.APPLICATION_JSON.getValue());
         response.setContent(content);
         return response;
     }
