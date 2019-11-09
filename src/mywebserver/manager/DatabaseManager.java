@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DatabaseManager {
 
@@ -33,7 +34,26 @@ public class DatabaseManager {
     private Connection connect() throws SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         this.connection = DriverManager.getConnection(this.url, this.user, this.password);
+        if (this.connection != null) {
+            createRequiredDatabaseTables();
+        }
         return this.connection;
+    }
+
+    private void createRequiredDatabaseTables() throws SQLException {
+        createTemperatureTable();
+    }
+
+    private void createTemperatureTable() throws SQLException {
+        final String sql = "CREATE TABLE IF NOT EXISTS temperature\n" +
+                "(\n" +
+                "    temp_id serial PRIMARY KEY,\n" +
+                "    value   NUMERIC   NOT NULL,\n" +
+                "    date    TIMESTAMP NOT NULL\n" +
+                "\n" +
+                ");";
+        Statement statement = this.connection.createStatement();
+        statement.execute(sql);
     }
 
     private void disconnect() {
@@ -42,7 +62,7 @@ public class DatabaseManager {
                 this.connection.close();
                 LOG.info("Database connection successfully closed");
             } catch (SQLException e) {
-                LOG.error(e);
+                LOG.error("Database connection closing failed", e);
             }
         }
     }

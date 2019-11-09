@@ -14,16 +14,5 @@ Check doxygen documentation
 ### REST API
 * Using Temperature Plugin
 
-### Database
-Used database: Postgresql. Before usage, please create table and update configuration file database under resources/conf.properties
-```postgresql
-create table temperature
-(
-    temp_id serial primary key,
-    value   numeric   not null,
-    date    timestamp not null
-
-);
-```
 ### Models
 * Temperature
