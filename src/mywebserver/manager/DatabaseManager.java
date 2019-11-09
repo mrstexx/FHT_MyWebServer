@@ -56,17 +56,6 @@ public class DatabaseManager {
         statement.execute(sql);
     }
 
-    private void disconnect() {
-        if (this.connection != null) {
-            try {
-                this.connection.close();
-                LOG.info("Database connection successfully closed");
-            } catch (SQLException e) {
-                LOG.error("Database connection closing failed", e);
-            }
-        }
-    }
-
     public static DatabaseManager getInstance() {
         if (manager == null) {
             return new DatabaseManager();
@@ -78,8 +67,15 @@ public class DatabaseManager {
         return connect();
     }
 
-    public void closeConnection() {
-        disconnect();
+    public static void closeConnection(Connection connection) {
+        if (connection != null) {
+            try {
+                connection.close();
+                LOG.info("Database connection successfully closed");
+            } catch (SQLException e) {
+                LOG.error("Database connection closing failed", e);
+            }
+        }
     }
 
 }

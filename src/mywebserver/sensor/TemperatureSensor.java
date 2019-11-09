@@ -27,19 +27,23 @@ public class TemperatureSensor implements Runnable {
 
     @Override
     public void run() {
+        Connection connection = null;
         if (!ENABLE_TIME_GENERATOR) {
-            try (Connection connection = DatabaseManager.getInstance().getConnection()) {
+            try {
+                connection = DatabaseManager.getInstance().getConnection();
                 measureCurrentTemperature(connection);
             } catch (SQLException | InterruptedException | ClassNotFoundException e) {
                 LOG.error(e);
             }
         } else {
-            try (Connection connection = DatabaseManager.getInstance().getConnection()) {
+            try {
+                connection = DatabaseManager.getInstance().getConnection();
                 generateRandomValues(connection, 10, new SimpleDateFormat("dd/MM/yyyy").parse("03/11/2019"));
             } catch (ParseException | SQLException | ClassNotFoundException e) {
                 LOG.error(e);
             }
         }
+        DatabaseManager.closeConnection(connection);
     }
 
     private void measureCurrentTemperature(Connection connection) throws InterruptedException {

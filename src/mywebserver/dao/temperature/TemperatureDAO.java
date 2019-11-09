@@ -12,7 +12,7 @@ public class TemperatureDAO implements ITemperatureDAO {
     private static final Logger LOG = LogManager.getLogger(TemperatureDAO.class);
     private static final String INSERT_QUERY_TEMPLATE = "INSERT INTO temperature (value, date) VALUES(?, ?);";
     private static final String SELECT_ALL = "SELECT * FROM temperature";
-    private static final String SELECT_RANGE = "SELECT * FROM temperature WHERE temp_id > ? AND temp_id <= ?";
+    private static final String SELECT_RANGE = "SELECT * FROM temperature LIMIT ? OFFSET ?";
     private static final String COUNT_RECORDS = "SELECT count(*) AS rowcount FROM temperature";
     private static final String SELECT_BY_DATE = "SELECT * FROM temperature WHERE CAST(date as DATE) = ?";
 
@@ -43,11 +43,9 @@ public class TemperatureDAO implements ITemperatureDAO {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(SELECT_RANGE);
-            int fromID = pageNumber <= 1 ? 0 : (pageNumber - 1) * numberOfResults;
-            int toID = pageNumber < 1 ? numberOfResults : pageNumber * numberOfResults;
-            // including following IDs
-            preparedStatement.setInt(1, fromID);
-            preparedStatement.setInt(2, toID);
+            int offset = pageNumber <= 1 ? 0 : (pageNumber - 1) * numberOfResults;
+            preparedStatement.setInt(1, numberOfResults);
+            preparedStatement.setInt(2, offset);
             temperatureList = executeGetQuery(preparedStatement);
         } catch (SQLException e) {
             LOG.error("Temperature select range execution failed", e);
