@@ -41,6 +41,10 @@ const handleAction = (getUrl) => {
         contentType: "application/x-www-form-urlencoded",
         success: (response) => {
             if (response != null) {
+                if (response.error) {
+                    alert("[ERROR]: " + response.error);
+                    return;
+                }
                 if (response.result) {
                     renderTable(response.result);
                 }
@@ -65,7 +69,11 @@ datePickerForm.on('submit', (e) => {
     e.preventDefault();
     const date = datePicker.val();
     if (date.length > 0) {
-        handleAction("/temperature?temperature_plugin=true&date=" + date);
+        const dateArray = date.split('-');
+        const year = dateArray[0];
+        const month = dateArray[1];
+        const day = dateArray[2];
+        handleAction("/GetTemperature/" + year + "/" + month + "/" + day);
     }
     pageNumber = 0;
 });

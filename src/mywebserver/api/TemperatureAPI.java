@@ -22,8 +22,9 @@ public class TemperatureAPI {
      *
      * @param date Date to get temperatures of
      * @return String of JSON object with results
+     * @deprecated Use rest request instead
      */
-    public static String getTemperaturesByDateAsJSON(Date date) {
+    public static String getTemperaturesByDateAsJSONString(Date date) {
         return TemperatureUtil.getTemperaturesByDate(date).toJSONString();
     }
 
@@ -34,7 +35,7 @@ public class TemperatureAPI {
      * @param date String value of date to get temperature of
      * @return String of JSON object with results
      */
-    public static String getTemperatureByStringAsJSON(String date) {
-        return TemperatureUtil.getTemperaturesByString(date).toJSONString();
+    public static String getTemperatureByStringAsJSONString(String date) {
+        return TemperatureUtil.getTemperaturesByStringDate(date).toJSONString();
     }
 }

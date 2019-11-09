@@ -65,7 +65,7 @@ public class TemperatureUtil {
         return result;
     }
 
-    public static JSONObject getTemperaturesByString(String dateValue) {
+    public static JSONObject getTemperaturesByStringDate(String dateValue) {
         Date date = getDateFromString(dateValue);
         if (date != null) {
             return getTemperaturesByDate(date);
