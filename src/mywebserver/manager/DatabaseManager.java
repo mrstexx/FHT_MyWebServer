@@ -30,7 +30,8 @@ public class DatabaseManager {
         this.password = propertyConfig.getPropertyValue(EConfigProperties.PASSWORD.getValue());
     }
 
-    private Connection connect() throws SQLException {
+    private Connection connect() throws SQLException, ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
         this.connection = DriverManager.getConnection(this.url, this.user, this.password);
         return this.connection;
     }
@@ -53,7 +54,7 @@ public class DatabaseManager {
         return manager;
     }
 
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException, ClassNotFoundException {
         return connect();
     }
 

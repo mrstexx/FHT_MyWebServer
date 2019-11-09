@@ -44,7 +44,7 @@ public class TemperatureUtil {
         try (Connection connection = DatabaseManager.getInstance().getConnection()) {
             temperatureList = temperatureDAO.getTemperatureRange(connection, page, numberOfPageRecords);
             countOfRecords = temperatureDAO.getNumberOfRecords(connection);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             LOG.error("Getting temperature connection page failed", e);
         }
         makeJSONStructure(temperaturePage, temperatureList);
@@ -58,7 +58,7 @@ public class TemperatureUtil {
         List<Temperature> temperatureList = new ArrayList<>();
         try (Connection connection = DatabaseManager.getInstance().getConnection()) {
             temperatureList = temperatureDAO.getTemperaturesByDate(connection, date);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             LOG.error("Getting temperature by date connection failed", e);
         }
         makeJSONStructure(result, temperatureList);
