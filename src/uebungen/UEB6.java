@@ -43,11 +43,17 @@ public class UEB6 {
     }
 
     public String getTemperatureUrl(LocalDate localDate, LocalDate localDate1) {
-        return null;
+        return "/temperature?temperature_plugin=true&date=" +
+                localDate.getYear() + "-" +
+                localDate.getMonthValue() + "-" +
+                localDate.getDayOfMonth();
     }
 
     public String getTemperatureRestUrl(LocalDate localDate, LocalDate localDate1) {
-        return null;
+        return "/GetTemperature/" +
+                localDate.getYear() + "/" +
+                localDate.getMonthValue() + "/" +
+                localDate.getDayOfMonth();
     }
 
     public String getNaviUrl() {
@@ -55,6 +61,6 @@ public class UEB6 {
     }
 
     public String getToLowerUrl() {
-        return "localhost:8080/tolower/";
+        return "/tolower";
     }
 }

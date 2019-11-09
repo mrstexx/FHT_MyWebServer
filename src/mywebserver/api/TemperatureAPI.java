@@ -13,7 +13,7 @@ public class TemperatureAPI {
      * @param numberOfPageResults Number of page results to be shown
      * @return String of JSON object with results
      */
-    public static String getTemperaturePageAsJSONString(int pageNumber, int numberOfPageResults) {
+    public static String getTemperaturePageData(int pageNumber, int numberOfPageResults) {
         return TemperatureUtil.getTemperaturePage(pageNumber, numberOfPageResults).toJSONString();
     }
 
@@ -22,9 +22,8 @@ public class TemperatureAPI {
      *
      * @param date Date to get temperatures of
      * @return String of JSON object with results
-     * @deprecated Use rest request instead
      */
-    public static String getTemperaturesByDateAsJSONString(Date date) {
+    public static String getTemperatureData(Date date) {
         return TemperatureUtil.getTemperaturesByDate(date).toJSONString();
     }
 
@@ -35,7 +34,7 @@ public class TemperatureAPI {
      * @param date String value of date to get temperature of
      * @return String of JSON object with results
      */
-    public static String getTemperatureByStringAsJSONString(String date) {
+    public static String getTemperatureData(String date) {
         return TemperatureUtil.getTemperaturesByStringDate(date).toJSONString();
     }
 }

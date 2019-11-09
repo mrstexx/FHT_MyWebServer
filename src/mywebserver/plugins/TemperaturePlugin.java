@@ -53,7 +53,7 @@ public class TemperaturePlugin implements Plugin {
             return RESTBadRequest();
         }
         String[] dateSegment = Arrays.copyOfRange(urlSegments, 1, urlSegments.length);
-        String content = TemperatureAPI.getTemperatureByStringAsJSONString(String.join("/", dateSegment));
+        String content = TemperatureAPI.getTemperatureData(String.join("/", dateSegment));
         response.setStatusCode(EStatusCodes.OK.getCode());
         response.setContentType(EMimeType.TEXT_JSON.getValue());
         response.setContent(content);
@@ -76,15 +76,14 @@ public class TemperaturePlugin implements Plugin {
         if (url.getParameterCount() > 0) {
             if (url.getParameter().containsKey(PARAM_PAGE)) {
                 pageNumber = Integer.parseInt(url.getParameter().get(PARAM_PAGE));
-                content = TemperatureAPI.getTemperaturePageAsJSONString(pageNumber, RECORDS_NUMBER_PER_PAGE);
+                content = TemperatureAPI.getTemperaturePageData(pageNumber, RECORDS_NUMBER_PER_PAGE);
+            } else if (url.getParameter().containsKey(PARAM_DATE)) {
+                try {
+                    content = TemperatureAPI.getTemperatureData(new SimpleDateFormat("yyyy-MM-dd").parse(url.getParameter().get(PARAM_DATE)));
+                } catch (ParseException e) {
+                    LOG.error("Unable to parse date format", e);
+                }
             }
-//            else if (url.getParameter().containsKey(PARAM_DATE)) {
-//                try {
-//                    content = TemperatureAPI.getTemperaturesByDateAsJSONString(new SimpleDateFormat("yyyy-MM-dd").parse(url.getParameter().get(PARAM_DATE)));
-//                } catch (ParseException e) {
-//                    LOG.error("Unable to parse date format", e);
-//                }
-//            }
         }
         response.setStatusCode(EStatusCodes.OK.getCode());
         response.setContentType(EMimeType.TEXT_JSON.getValue());
