@@ -11,3 +11,5 @@
 /.idea/tasks.xml
 *.iws
 /.idea/
+
+/resources/austria-latest.osm.pbf

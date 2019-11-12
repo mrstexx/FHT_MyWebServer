@@ -1,5 +1,6 @@
 package mywebserver.server;
 
+import mywebserver.sensor.TemperatureSensor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,8 +42,7 @@ public class WebServer {
     }
 
     private void handleSensors() {
-        // TODO ENABLE SENSORS WHEN NEEDED
-        // TemperatureSensor temperatureSensor = new TemperatureSensor();
-        // new Thread(temperatureSensor).start();
+        TemperatureSensor temperatureSensor = new TemperatureSensor();
+        new Thread(temperatureSensor).start();
     }
 }

@@ -82,6 +82,7 @@ public class TemperatureUtil {
     private static Date getDateFromString(String dateValue) {
         Date date = null;
         try {
+            dateFormatter.setLenient(false);
             strictDateFormatter.parse(dateValue);
             date = dateFormatter.parse(dateValue);
         } catch (DateTimeParseException | ParseException e) {
