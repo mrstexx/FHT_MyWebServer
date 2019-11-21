@@ -8,6 +8,6 @@ public class Constants {
 
     public static final String STATIC_FOLDER_PATH = USER_DIR + FILE_SEPARATOR + "deploy" + FILE_SEPARATOR + "tmp-static-files";
 
-    public static final String CONFIG_PATH = USER_DIR + FILE_SEPARATOR + "src" + FILE_SEPARATOR + "resources";
+    public static final String RESOURCES_PATH = USER_DIR + FILE_SEPARATOR + "src" + FILE_SEPARATOR + "resources";
 
 }

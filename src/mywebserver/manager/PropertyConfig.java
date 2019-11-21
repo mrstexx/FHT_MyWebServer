@@ -18,7 +18,7 @@ public class PropertyConfig {
     }
 
     private void readProperties(String fileName) {
-        File configFile = new File(Constants.CONFIG_PATH, fileName);
+        File configFile = new File(Constants.RESOURCES_PATH, fileName);
         if (configFile.exists()) {
             try (InputStream inputStream = new FileInputStream(configFile)) {
                 this.properties.load(inputStream);

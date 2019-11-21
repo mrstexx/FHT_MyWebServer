@@ -95,7 +95,7 @@ public class WebURL implements Url {
         String lastSegment = getLastSegment();
         if (lastSegment.contains(".")) {
             String[] fileSegments = lastSegment.split("[.]");
-            return fileSegments[fileSegments.length - 1];
+            return fileSegments.length > 0 ? fileSegments[fileSegments.length - 1] : "";
         }
         return "";
     }
@@ -112,7 +112,7 @@ public class WebURL implements Url {
 
     private String getLastSegment() {
         String[] segments = getSegments();
-        return segments[segments.length - 1];
+        return segments.length > 0 ? segments[segments.length - 1] : "";
     }
 
     public static boolean isValidURL(String url) {

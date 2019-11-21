@@ -4,17 +4,28 @@ import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.Url;
-import mywebserver.api.NavigationAPI;
+import mywebserver.plugins.navigation.NavigationParser;
+import mywebserver.plugins.navigation.NavigationStore;
 import mywebserver.response.EMimeType;
 import mywebserver.response.EStatusCodes;
 import mywebserver.response.WebResponse;
+import mywebserver.util.Constants;
 import mywebserver.util.PluginUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class NavigationPlugin implements Plugin {
+
+    private static final Logger LOG = LogManager.getLogger(NavigationPlugin.class);
+    private static final String OSM_PATH = Constants.RESOURCES_PATH + "data.osm";
+    private static final String PARAM_LOAD_MAP = "load_map";
 
     @Override
     public float canHandle(Request req) {
@@ -28,6 +39,26 @@ public class NavigationPlugin implements Plugin {
 
     @Override
     public Response handle(Request req) {
+        Url url = req.getUrl();
+        if (url.getParameter().get(PARAM_LOAD_MAP) != null) {
+            return handleLoadMap();
+        }
+        return handleStreetSearch(req);
+    }
+
+    private Response handleLoadMap() {
+        Response response = new WebResponse();
+        try {
+            NavigationStore.setNavStore(NavigationParser.loadStore());
+            response.setStatusCode(EStatusCodes.OK.getCode());
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            LOG.error("An error occurred while parsing Navigation XML data", e);
+            response.setStatusCode(EStatusCodes.INTERNAL_SERVER_ERROR.getCode());
+        }
+        return response;
+    }
+
+    private Response handleStreetSearch(Request req) {
         Response response = new WebResponse();
         String content = req.getContentString();
         // example : street=Hauptplatz -> we take test only
@@ -44,15 +75,19 @@ public class NavigationPlugin implements Plugin {
     }
 
     private String getCityResults(String streetName) {
-        List<String> listOfCities = NavigationAPI.getCities(streetName);
+        List<String> listOfCities = NavigationStore.getInstance().getStoreValue(streetName);
         if (listOfCities.size() < 1) {
             return "Not found: Bitte geben Sie eine Anfrage ein";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("Orte gefunden");
+        sb.append("Orte gefunden: ");
+        int count = 1;
         for (String city : listOfCities) {
+            sb.append("<br/>");
+            sb.append(count).append(": ");
             sb.append(city);
-            sb.append("\n");
+            sb.append("<br/>");
+            count++;
         }
         return sb.toString();
     }
