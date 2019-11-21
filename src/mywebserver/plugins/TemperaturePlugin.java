@@ -30,8 +30,14 @@ public class TemperaturePlugin implements Plugin {
         float defaultProbability = PluginUtil.getDefaultPluginProbability(TemperaturePlugin.class, req);
         Url url = req.getUrl();
         String[] segments = url.getSegments();
-        if (segments.length > 0 && isRESTRequest(segments[0])) {
-            defaultProbability += REST_PLUGIN_PROBABILITY;
+        if (segments.length > 0) {
+            if (isRESTRequest(segments[0])) {
+                defaultProbability += REST_PLUGIN_PROBABILITY;
+            } else {
+                if (url.getParameterCount() < 1 && url.getParameter().get(PARAM_PAGE) == null) {
+                    return 0;
+                }
+            }
         }
         return defaultProbability < 1 ? defaultProbability : 1;
     }

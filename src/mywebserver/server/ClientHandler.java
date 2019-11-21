@@ -5,6 +5,7 @@ import BIF.SWE1.interfaces.PluginManager;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import mywebserver.manager.PluginManagerImpl;
+import mywebserver.plugins.NavigationPlugin;
 import mywebserver.plugins.StaticFilePlugin;
 import mywebserver.plugins.TemperaturePlugin;
 import mywebserver.plugins.ToLowerPlugin;
@@ -66,6 +67,7 @@ public class ClientHandler implements Runnable {
         this.pluginManager.add(new ToLowerPlugin());
         this.pluginManager.add(new StaticFilePlugin());
         this.pluginManager.add(new TemperaturePlugin());
+        this.pluginManager.add(new NavigationPlugin());
     }
 
     private void closeStreams() {

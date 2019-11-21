@@ -12,4 +12,4 @@
 *.iws
 /.idea/
 
-/resources/austria-latest.osm.pbf
+/src/resources/austria-latest.osm.pbf

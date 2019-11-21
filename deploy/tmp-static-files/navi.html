@@ -46,11 +46,21 @@
 <div class="jumbotron">
     <div class="container">
         <h1>Navigation Plugin</h1>
-        <p class="lead">Some text goes here</p>
+        <p class="lead">Easily search for streets in different cities.</p>
     </div>
 </div>
 <div class="container">
-    <h2>Map:</h2>
+    <div class="navi-search">
+        <form id="naviSearch">
+            <div class="form-group mb-2">
+                <label for="naviSearchInput">Street name:</label>
+                <input type="text" class="form-control" id="naviSearchInput">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Search</button>
+        </form>
+        <div class="result"></div>
+    </div>
 </div>
 </body>
+<script src="navi.js"></script>
 </html>

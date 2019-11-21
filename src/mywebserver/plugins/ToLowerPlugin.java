@@ -3,6 +3,7 @@ package mywebserver.plugins;
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
+import BIF.SWE1.interfaces.Url;
 import mywebserver.response.EMimeType;
 import mywebserver.response.EStatusCodes;
 import mywebserver.response.WebResponse;
@@ -15,7 +16,12 @@ public class ToLowerPlugin implements Plugin {
 
     @Override
     public float canHandle(Request req) {
-        return PluginUtil.getDefaultPluginProbability(ToLowerPlugin.class, req);
+        float defaultProbability = PluginUtil.getDefaultPluginProbability(ToLowerPlugin.class, req);
+        Url url = req.getUrl();
+        if (url.getExtension().equals("") && url.getParameterCount() < 1) {
+            return 0;
+        }
+        return defaultProbability;
     }
 
     @Override

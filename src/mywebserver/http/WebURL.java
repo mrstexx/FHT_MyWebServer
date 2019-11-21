@@ -97,7 +97,7 @@ public class WebURL implements Url {
             String[] fileSegments = lastSegment.split("[.]");
             return fileSegments[fileSegments.length - 1];
         }
-        return null;
+        return "";
     }
 
     @Override
