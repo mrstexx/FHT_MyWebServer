@@ -28,8 +28,12 @@ loadNewMapButton.on("click", (e) => {
         url: encodeURI("/navigation?navigation_plugin=true&load_map=true"),
         type: "POST",
         contentType: "application/x-www-form-urlencoded",
-        success: () => {
-            alert("Data successfully loaded");
+        success: (response) => {
+            if (response && response !== "OK") {
+                alert(response);
+            } else {
+                alert("Data successfully loaded");
+            }
             loadNewMapButton.empty().append("Load new map");
             loadNewMapButton.prop("disabled", false);
         },

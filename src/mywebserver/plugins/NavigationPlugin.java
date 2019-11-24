@@ -20,12 +20,16 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class NavigationPlugin implements Plugin {
 
     private static final Logger LOG = LogManager.getLogger(NavigationPlugin.class);
     private static final String OSM_PATH = Constants.RESOURCES_PATH + "data.osm";
     private static final String PARAM_LOAD_MAP = "load_map";
+
+    private static Lock lock = new ReentrantLock();
 
     @Override
     public float canHandle(Request req) {
@@ -48,12 +52,22 @@ public class NavigationPlugin implements Plugin {
 
     private Response handleLoadMap() {
         Response response = new WebResponse();
-        try {
-            NavigationStore.setNavStore(NavigationParser.loadStore());
+        if (lock.tryLock()) {
+            try {
+                NavigationStore.setNavStore(NavigationParser.loadStore());
+                response.setStatusCode(EStatusCodes.OK.getCode());
+                response.setContentType(EMimeType.TEXT_PLAIN.getValue());
+                response.setContent("OK");
+            } catch (ParserConfigurationException | SAXException | IOException e) {
+                LOG.error("An error occurred while parsing Navigation XML data", e);
+                response.setStatusCode(EStatusCodes.INTERNAL_SERVER_ERROR.getCode());
+            } finally {
+                lock.unlock();
+            }
+        } else {
             response.setStatusCode(EStatusCodes.OK.getCode());
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            LOG.error("An error occurred while parsing Navigation XML data", e);
-            response.setStatusCode(EStatusCodes.INTERNAL_SERVER_ERROR.getCode());
+            response.setContentType(EMimeType.TEXT_PLAIN.getValue());
+            response.setContent("This action has been already started by another user.");
         }
         return response;
     }
