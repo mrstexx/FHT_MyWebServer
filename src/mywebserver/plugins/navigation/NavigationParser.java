@@ -13,6 +13,15 @@ public class NavigationParser {
 
     private static final String OSM_DATA_PATH = Constants.RESOURCES_PATH + Constants.FILE_SEPARATOR + "wien.xml";
 
+    /**
+     * Load navigation store. It load all xml to navigation store
+     *
+     * @return Navigation store with all city-street informations
+     * @throws ParserConfigurationException Parsing exception
+     * @throws SAXException                 Possible exception while parsing data
+     * @throws IOException                  If file does not exist
+     * @NotThreadSafe Not safe to be used for multithreading. Recommended usage with Locks.
+     */
     public static NavigationStore loadStore() throws ParserConfigurationException, SAXException, IOException {
         File file = new File(OSM_DATA_PATH);
         SAXParserFactory factory = SAXParserFactory.newInstance();

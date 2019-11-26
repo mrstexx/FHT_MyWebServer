@@ -30,6 +30,12 @@ public class PropertyConfig {
         }
     }
 
+    /**
+     * Method used to get ptopery name from configuration file
+     *
+     * @param propertyName Property name of value to be returned
+     * @return Value of passed property name
+     */
     public String getPropertyValue(String propertyName) {
         String value = this.properties.getProperty(propertyName);
         if (value != null) {

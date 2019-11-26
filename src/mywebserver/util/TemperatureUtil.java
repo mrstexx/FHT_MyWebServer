@@ -36,6 +36,13 @@ public class TemperatureUtil {
     private static DateTimeFormatter strictDateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd", Locale.GERMANY)
             .withResolverStyle(ResolverStyle.STRICT);
 
+    /**
+     * Method used to get all temperature data for one page.
+     *
+     * @param page                Page number
+     * @param numberOfPageRecords Number of page results to be shown
+     * @return JSON Structure with page results.
+     */
     public static JSONObject getTemperaturePage(int page, int numberOfPageRecords) {
         JSONObject temperaturePage = new JSONObject();
         TemperatureDAO temperatureDAO = new TemperatureDAO();
@@ -55,6 +62,13 @@ public class TemperatureUtil {
         return temperaturePage;
     }
 
+    /**
+     * Method used to get all temperature measures for specific date.
+     *
+     * @param date Date to be searched for.
+     * @return JSON structure with all temperature measures for specific date. If no data for entered date,
+     * it returns empty JSON Structure.
+     */
     public static JSONObject getTemperaturesByDate(Date date) {
         JSONObject result = new JSONObject();
         TemperatureDAO temperatureDAO = new TemperatureDAO();
@@ -71,6 +85,13 @@ public class TemperatureUtil {
         return result;
     }
 
+    /**
+     * Method used to get all temperature measures for specific date.
+     *
+     * @param dateValue Date value to be searched for.
+     * @return JSON Structure with all temperature measures for specific date. If date wrong entered,
+     * it returns error JSON Structure.
+     */
     public static JSONObject getTemperaturesByStringDate(String dateValue) {
         Date date = getDateFromString(dateValue);
         if (date != null) {

@@ -5,6 +5,7 @@ import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.Url;
 import mywebserver.api.TemperatureAPI;
+import mywebserver.request.ERequestMethods;
 import mywebserver.response.EMimeType;
 import mywebserver.response.EStatusCodes;
 import mywebserver.response.WebResponse;
@@ -34,7 +35,9 @@ public class TemperaturePlugin implements Plugin {
             if (isRESTRequest(segments[0])) {
                 defaultProbability += REST_PLUGIN_PROBABILITY;
             } else {
-                if (url.getParameterCount() < 1 && url.getParameter().get(PARAM_PAGE) == null) {
+                if (!req.getMethod().equals(ERequestMethods.POST.getValue())) {
+                    return 0;
+                } else if (url.getParameterCount() < 1 && url.getParameter().get(PARAM_PAGE) == null) {
                     return 0;
                 }
             }

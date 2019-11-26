@@ -56,6 +56,11 @@ public class DatabaseManager {
         statement.execute(sql);
     }
 
+    /**
+     * Method used to get database manager instance
+     *
+     * @return Database Manager instance
+     */
     public static DatabaseManager getInstance() {
         if (manager == null) {
             return new DatabaseManager();
@@ -63,10 +68,22 @@ public class DatabaseManager {
         return manager;
     }
 
+    /**
+     * Method used to get database connection
+     *
+     * @return Database Connection
+     * @throws SQLException           On creating table, possible exception by executing connection statement
+     * @throws ClassNotFoundException If database driver is not existing
+     */
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         return connect();
     }
 
+    /**
+     * Method used to close database connection
+     *
+     * @param connection Connection to be closed
+     */
     public static void closeConnection(Connection connection) {
         if (connection != null) {
             try {

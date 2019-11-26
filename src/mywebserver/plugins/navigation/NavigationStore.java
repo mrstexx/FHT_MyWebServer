@@ -11,6 +11,12 @@ public class NavigationStore {
         this.navStore = new HashMap<>();
     }
 
+    /**
+     * Get value from store with passed key
+     *
+     * @param storeKey Store key
+     * @return List of all values with passed key
+     */
     public List<String> getStoreValue(final String storeKey) {
         if (this.navStore.containsKey(storeKey)) {
             return this.navStore.get(storeKey);
@@ -18,6 +24,13 @@ public class NavigationStore {
         return new LinkedList<>();
     }
 
+
+    /**
+     * Add new value to store with key. If key is already existing, it will be added to the current store list.
+     *
+     * @param storeKey   Store key
+     * @param storeValue Store value
+     */
     public void addStoreValue(final String storeKey, final String storeValue) {
         if (storeKey == null || storeValue == null) {
             return;
@@ -33,6 +46,9 @@ public class NavigationStore {
         }
     }
 
+    /**
+     * @return Get Navigation Store. Never returns null
+     */
     public static NavigationStore getInstance() {
         if (navStoreObj == null) {
             navStoreObj = new NavigationStore();
@@ -40,6 +56,11 @@ public class NavigationStore {
         return navStoreObj;
     }
 
+    /**
+     * Set navigation Store
+     *
+     * @param navStore Navigation Store
+     */
     public static void setNavStore(NavigationStore navStore) {
         navStoreObj = navStore;
     }

@@ -57,7 +57,7 @@ public class UEB6 {
     }
 
     public String getNaviUrl() {
-        return "/navigation";
+        return "/navigation?navigation_plugin=true";
     }
 
     public String getToLowerUrl() {

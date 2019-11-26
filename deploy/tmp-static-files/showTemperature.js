@@ -36,7 +36,7 @@ prevBtn.on('click', () => {
 const handleAction = (getUrl) => {
     $.ajax({
         url: getUrl,
-        type: "GET",
+        type: "POST",
         dataType: "json",
         contentType: "application/x-www-form-urlencoded",
         success: (response) => {

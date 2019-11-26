@@ -12,6 +12,16 @@ public class PluginUtil {
 
     private static final String PLUGIN_SUFFIX = "_plugin";
 
+    /**
+     * Method used to calculate default plugin probability based on plugin name and request.
+     * If the url segment is same as plugin name, it will add 0.4 to return value.
+     * Additionally if url contains param pluginname_plugin=true (example tolower_plugin=true)
+     * it will add again 0.4 to return value.
+     *
+     * @param pluginClass Plugin class for which we need to calculate default probability
+     * @param request     Plugin http request
+     * @return Plugin probability. Value between 0 and 1.
+     */
     public static float getDefaultPluginProbability(Class pluginClass, Request request) {
         float pluginProbability = 0f;
         String className = pluginClass.getSimpleName().toLowerCase();

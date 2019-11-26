@@ -20,11 +20,7 @@ public class StaticFilePlugin implements Plugin {
 
     private static final Logger LOG = LogManager.getLogger(StaticFilePlugin.class);
     private static final float PLUGIN_PROBABILITY = 0.1f;
-
-    public StaticFilePlugin() {
-        // Empty constr body
-    }
-
+    
     @Override
     public float canHandle(Request req) {
         float pluginProbability = PluginUtil.getDefaultPluginProbability(StaticFilePlugin.class, req);

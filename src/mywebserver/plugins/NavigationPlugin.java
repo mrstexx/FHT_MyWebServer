@@ -6,6 +6,7 @@ import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.Url;
 import mywebserver.plugins.navigation.NavigationParser;
 import mywebserver.plugins.navigation.NavigationStore;
+import mywebserver.request.ERequestMethods;
 import mywebserver.response.EMimeType;
 import mywebserver.response.EStatusCodes;
 import mywebserver.response.WebResponse;
@@ -26,19 +27,16 @@ import java.util.concurrent.locks.ReentrantLock;
 public class NavigationPlugin implements Plugin {
 
     private static final Logger LOG = LogManager.getLogger(NavigationPlugin.class);
-    private static final String OSM_PATH = Constants.RESOURCES_PATH + "data.osm";
     private static final String PARAM_LOAD_MAP = "load_map";
 
     private static Lock lock = new ReentrantLock();
 
     @Override
     public float canHandle(Request req) {
-        float defaultProbability = PluginUtil.getDefaultPluginProbability(NavigationPlugin.class, req);
-        Url url = req.getUrl();
-        if (url.getExtension().equals("") && url.getParameterCount() < 1) {
+        if (!req.getMethod().equals(ERequestMethods.POST.getValue())) {
             return 0;
         }
-        return defaultProbability;
+        return PluginUtil.getDefaultPluginProbability(NavigationPlugin.class, req);
     }
 
     @Override
