@@ -21,7 +21,7 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     @Override
-    public Iterable<Plugin> getPlugins() {
+    public List<Plugin> getPlugins() {
         return this.plugins;
     }
 
