@@ -9,10 +9,7 @@ Idea was to implement own web server with own parsing functions for HTTP request
 * To Lower
 
 ### Documentation
-Check doxygen documentation
+Check JavaDoc documentation
 
 ### REST API
-* Using Temperature Plugin
-
-### Models
-* Temperature
+* Using Temperature Plugin: /GetTemperature/YYYY/MM/DD
