@@ -48,7 +48,7 @@ public class NavigationStore {
     /**
      * @return Get Navigation Store. Never returns null
      */
-    public static NavigationStore getInstance() {
+    public static synchronized NavigationStore getInstance() {
         if (navStoreObj == null) {
             navStoreObj = new NavigationStore();
         }
@@ -60,7 +60,7 @@ public class NavigationStore {
      *
      * @param navStore Navigation Store
      */
-    public static void setNavStore(NavigationStore navStore) {
+    public static synchronized void setNavStore(NavigationStore navStore) {
         navStoreObj = navStore;
     }
 }

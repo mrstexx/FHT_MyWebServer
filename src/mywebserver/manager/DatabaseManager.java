@@ -63,7 +63,7 @@ public class DatabaseManager {
      *
      * @return Database Manager instance
      */
-    public static DatabaseManager getInstance() {
+    public static synchronized DatabaseManager getInstance() {
         if (manager == null) {
             return new DatabaseManager();
         }
@@ -86,7 +86,7 @@ public class DatabaseManager {
      *
      * @param connection Connection to be closed
      */
-    public static void closeConnection(Connection connection) {
+    public static synchronized void closeConnection(Connection connection) {
         if (connection != null) {
             try {
                 connection.close();

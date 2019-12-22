@@ -17,7 +17,7 @@ public class PluginServiceManager extends ServiceManager {
         this.pluginManager = new PluginManagerImpl();
     }
 
-    public static PluginServiceManager getInstance() {
+    public static synchronized PluginServiceManager getInstance() {
         if (pluginServiceManager != null) {
             return pluginServiceManager;
         }
