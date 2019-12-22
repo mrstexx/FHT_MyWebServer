@@ -49,6 +49,7 @@ public class NavigationPlugin implements Plugin {
 
     private Response handleLoadMap() {
         Response response = new WebResponse();
+        // locking for map loading - only one user can in multi-thread env load new map
         if (lock.tryLock()) {
             try {
                 NavigationStore.setNavStore(NavigationParser.loadStore());

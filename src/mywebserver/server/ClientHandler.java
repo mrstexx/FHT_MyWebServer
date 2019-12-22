@@ -39,7 +39,7 @@ public class ClientHandler implements Runnable {
 
             float max = 0f;
             Plugin pluginToHandle = null;
-
+            // check for every plugin probability if can handle
             for (Plugin plugin : pluginManager.getPlugins()) {
                 float pluginProbability = plugin.canHandle(request);
                 if (pluginProbability > max) {

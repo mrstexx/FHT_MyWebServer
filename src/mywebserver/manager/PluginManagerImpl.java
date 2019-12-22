@@ -40,15 +40,18 @@ public class PluginManagerImpl implements PluginManager {
             NoSuchMethodException,
             InvocationTargetException, MalformedURLException {
         Plugin newPlugin = null;
+        // check for all implementations of interface Plugin
         URLClassLoader classLoader = new URLClassLoader(new URL[]{new File("./").toURI().toURL()});
         Class<?> clazz = Class.forName(plugin, true, classLoader);
         Class<?>[] interfaces = clazz.getInterfaces();
+        // iterate all interfaces and create new instances
         for (Class i : interfaces) {
             if (i.toString().equals(Plugin.class.toString())) {
                 Constructor<?> ctor = clazz.getConstructor();
                 newPlugin = (Plugin) ctor.newInstance();
             }
         }
+        // if new instance is not null and if name is not yet contained in plugin list, add it to the list
         if (newPlugin != null && !isClassNameContained(plugin)) {
             this.plugins.add(newPlugin);
             return;
@@ -57,6 +60,7 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     private boolean isClassNameContained(String className) {
+        // check if name is contained in plugins
         for (Plugin plugin : this.plugins) {
             if (plugin.getClass().getSimpleName().equals(className)) {
                 return true;

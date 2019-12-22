@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
+// data access object
 public interface ITemperatureDAO {
 
     /**

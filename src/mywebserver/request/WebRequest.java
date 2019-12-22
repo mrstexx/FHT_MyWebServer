@@ -61,8 +61,6 @@ public class WebRequest implements Request {
             }
             if (ERequestMethods.contains(method)) {
                 this.requestMethod = method;
-                // WebURL.isValidURL()
-                // TODO better handling for isValidURL
                 if (!url.isEmpty()) {
                     this.rawPath = url;
                     this.isValidRequest = true;

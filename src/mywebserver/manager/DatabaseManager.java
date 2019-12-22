@@ -35,6 +35,7 @@ public class DatabaseManager {
         Class.forName("org.postgresql.Driver");
         this.connection = DriverManager.getConnection(this.url, this.user, this.password);
         if (this.connection != null) {
+            // check if all required tables are available, if not create them
             createRequiredDatabaseTables();
         }
         return this.connection;
@@ -45,6 +46,7 @@ public class DatabaseManager {
     }
 
     private void createTemperatureTable() throws SQLException {
+        // create table on webserver start if table does not exists
         final String sql = "CREATE TABLE IF NOT EXISTS temperature\n" +
                 "(\n" +
                 "    temp_id serial PRIMARY KEY,\n" +

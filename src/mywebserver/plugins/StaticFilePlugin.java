@@ -20,11 +20,12 @@ public class StaticFilePlugin implements Plugin {
 
     private static final Logger LOG = LogManager.getLogger(StaticFilePlugin.class);
     private static final float PLUGIN_PROBABILITY = 0.1f;
-    
+
     @Override
     public float canHandle(Request req) {
         float pluginProbability = PluginUtil.getDefaultPluginProbability(StaticFilePlugin.class, req);
         String path = req.getUrl().getPath();
+        // additional plugin criterium - number of slashes
         long numberOfSlashes = path.chars().filter(character -> character == '/').count();
         if (numberOfSlashes > 0) {
             pluginProbability += PLUGIN_PROBABILITY;

@@ -27,6 +27,7 @@ public class PluginServiceManager extends ServiceManager {
 
     @Override
     public void loadServices(String fileName) throws IOException {
+        // go through file and check each file line if relevant plugin is
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         String fileLine = "";
         while ((fileLine = br.readLine()) != null) {

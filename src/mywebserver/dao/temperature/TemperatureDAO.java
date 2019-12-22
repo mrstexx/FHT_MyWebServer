@@ -98,6 +98,7 @@ public class TemperatureDAO implements ITemperatureDAO {
 
     @Override
     public Temperature getTemperatureByID(Connection connection, long id) {
+        // TO IMPL not required - makes no sense
         return null;
     }
 

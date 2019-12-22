@@ -33,8 +33,10 @@ public class TemperaturePlugin implements Plugin {
         String[] segments = url.getSegments();
         if (segments.length > 0) {
             if (isRESTRequest(segments[0])) {
+                // rest plugin prop has the strongest value
                 defaultProbability += REST_PLUGIN_PROBABILITY;
             } else {
+                // check if post - all requests must be POST
                 if (!req.getMethod().equals(ERequestMethods.POST.getValue())) {
                     return 0;
                 } else if (url.getParameterCount() < 1 && url.getParameter().get(PARAM_PAGE) == null) {
@@ -73,12 +75,12 @@ public class TemperaturePlugin implements Plugin {
         Response response = new WebResponse();
         response.setStatusCode(EStatusCodes.BAD_REQUEST.getCode());
         response.setContentType(EMimeType.TEXT_PLAIN.getValue());
-        // TODO use static plugin response maybe
         response.setContent(EStatusCodes.BAD_REQUEST.getValue());
         return response;
     }
 
     private Response handlePageRequest(Url url) {
+        // handler for showing one page on client
         Response response = new WebResponse();
         int pageNumber = 0;
         String content = "";

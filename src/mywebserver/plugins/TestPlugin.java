@@ -12,6 +12,7 @@ public class TestPlugin implements Plugin {
     private static final float PLUGIN_PROBABILITY = 0.2f;
 
     public TestPlugin() {
+        // test plugin, only for unit tests used
     }
 
     @Override

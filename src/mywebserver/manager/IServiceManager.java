@@ -12,5 +12,4 @@ public interface IServiceManager {
      * @throws java.io.IOException When service file location is not found.
      */
     void loadServices(final String fileName) throws IOException;
-
 }

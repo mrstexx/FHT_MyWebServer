@@ -3,7 +3,6 @@ package mywebserver.plugins;
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
-import BIF.SWE1.interfaces.Url;
 import mywebserver.request.ERequestMethods;
 import mywebserver.response.EMimeType;
 import mywebserver.response.EStatusCodes;

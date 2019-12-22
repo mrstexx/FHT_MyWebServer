@@ -116,6 +116,7 @@ public class WebURL implements Url {
     }
 
     public static boolean isValidURL(String url) {
+        // actually never used - can be removed in future
         if (url == null || url.isEmpty()) {
             return false;
         }
