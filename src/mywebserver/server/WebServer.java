@@ -1,6 +1,8 @@
 package mywebserver.server;
 
+import mywebserver.manager.PluginServiceManager;
 import mywebserver.sensor.TemperatureSensor;
+import mywebserver.util.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +21,7 @@ public class WebServer {
     }
 
     public void start() {
+        registerPlugins();
         handleSensors();
         handleClients();
     }
@@ -44,5 +47,13 @@ public class WebServer {
     private void handleSensors() {
         TemperatureSensor temperatureSensor = new TemperatureSensor();
         new Thread(temperatureSensor).start();
+    }
+
+    private void registerPlugins() {
+        try {
+            PluginServiceManager.getInstance().loadServices(Constants.PLUGIN_SERVICE_PATH);
+        } catch (IOException e) {
+            LOG.error("Loading plugins failed, {}", e.getMessage());
+        }
     }
 }

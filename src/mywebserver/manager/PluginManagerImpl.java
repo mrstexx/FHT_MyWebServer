@@ -14,8 +14,6 @@ import java.util.List;
 
 public class PluginManagerImpl implements PluginManager {
 
-    private static final String PLUGIN_EXT = ".jar";
-
     private List<Plugin> plugins;
 
     public PluginManagerImpl() {

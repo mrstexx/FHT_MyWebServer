@@ -24,7 +24,6 @@ public class NavigationStore {
         return new LinkedList<>();
     }
 
-
     /**
      * Add new value to store with key. If key is already existing, it will be added to the current store list.
      *

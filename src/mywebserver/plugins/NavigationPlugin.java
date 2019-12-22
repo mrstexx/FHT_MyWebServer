@@ -10,7 +10,6 @@ import mywebserver.request.ERequestMethods;
 import mywebserver.response.EMimeType;
 import mywebserver.response.EStatusCodes;
 import mywebserver.response.WebResponse;
-import mywebserver.util.Constants;
 import mywebserver.util.PluginUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -93,9 +92,9 @@ public class NavigationPlugin implements Plugin {
         }
         StringBuilder sb = new StringBuilder();
         sb.append("Orte gefunden: ");
+        sb.append("<br/>");
         int count = 1;
         for (String city : listOfCities) {
-            sb.append("<br/>");
             sb.append(count).append(": ");
             sb.append(city);
             sb.append("<br/>");

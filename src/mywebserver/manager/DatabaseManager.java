@@ -11,7 +11,7 @@ import java.sql.Statement;
 public class DatabaseManager {
 
     private static final Logger LOG = LogManager.getLogger(DatabaseManager.class);
-    private static final String CONFIG = "conf.properties";
+    private static final String CONFIG = "db_conf.properties";
     private static DatabaseManager manager;
 
     private String url;

@@ -4,11 +4,7 @@ import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.PluginManager;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
-import mywebserver.manager.PluginManagerImpl;
-import mywebserver.plugins.NavigationPlugin;
-import mywebserver.plugins.StaticFilePlugin;
-import mywebserver.plugins.TemperaturePlugin;
-import mywebserver.plugins.ToLowerPlugin;
+import mywebserver.manager.PluginServiceManager;
 import mywebserver.request.WebRequest;
 import mywebserver.response.WebResponse;
 import org.apache.logging.log4j.LogManager;
@@ -29,8 +25,7 @@ public class ClientHandler implements Runnable {
 
     ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
-        this.pluginManager = new PluginManagerImpl();
-        registerPlugins();
+        this.pluginManager = PluginServiceManager.getInstance().getPluginManager();
     }
 
     @Override
@@ -57,17 +52,10 @@ public class ClientHandler implements Runnable {
             }
             response.send(this.outputStream);
         } catch (Exception e) {
-            LOG.error(e);
+            LOG.error("Handling plugins failed, {}.", e.getMessage());
         } finally {
             closeStreams();
         }
-    }
-
-    private void registerPlugins() {
-        this.pluginManager.add(new ToLowerPlugin());
-        this.pluginManager.add(new StaticFilePlugin());
-        this.pluginManager.add(new TemperaturePlugin());
-        this.pluginManager.add(new NavigationPlugin());
     }
 
     private void closeStreams() {

@@ -22,4 +22,9 @@ public class Constants {
      */
     public static final String RESOURCES_PATH = USER_DIR + FILE_SEPARATOR + "src" + FILE_SEPARATOR + "resources";
 
+    /**
+     * Plugin services path
+     */
+    public static final String PLUGIN_SERVICE_PATH = RESOURCES_PATH + FILE_SEPARATOR + "services" + FILE_SEPARATOR + "plugin_service.txt";
+
 }

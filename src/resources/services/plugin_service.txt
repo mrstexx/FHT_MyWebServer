@@ -1,0 +1,4 @@
+mywebserver.plugins.NavigationPlugin
+mywebserver.plugins.StaticFilePlugin
+mywebserver.plugins.TemperaturePlugin
+mywebserver.plugins.ToLowerPlugin
