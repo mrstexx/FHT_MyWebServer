@@ -36,6 +36,7 @@ public class TemperatureSensor implements Runnable {
                 LOG.error(e);
             }
         } else {
+            // USED TO GENERATE RANDOM VALUES
             try {
                 connection = DatabaseManager.getInstance().getConnection();
                 generateRandomValues(connection, 10, new SimpleDateFormat("dd/MM/yyyy").parse("03/11/2019"));

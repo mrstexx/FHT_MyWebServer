@@ -17,7 +17,7 @@ public class NavigationStore {
      * @param storeKey Store key
      * @return List of all values with passed key
      */
-    public List<String> getStoreValue(final String storeKey) {
+    public synchronized List<String> getStoreValue(final String storeKey) {
         if (this.navStore.containsKey(storeKey)) {
             return this.navStore.get(storeKey);
         }
@@ -30,7 +30,7 @@ public class NavigationStore {
      * @param storeKey   Store key
      * @param storeValue Store value
      */
-    public void addStoreValue(final String storeKey, final String storeValue) {
+    public synchronized void addStoreValue(final String storeKey, final String storeValue) {
         if (storeKey == null || storeValue == null) {
             return;
         }
